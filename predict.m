@@ -1,25 +1,47 @@
-function p = predict(theta, X)
+function p = predict(Theta1, Theta2, X)
 
+%PREDICT Predict the label of an input given a trained neural network
+%   p = PREDICT(Theta1, Theta2, X) outputs the predicted label of X given the
+%   trained weights of a neural network (Theta1, Theta2)
 
-%PREDICT Predict whether the label is 0 or 1 using learned logistic
- 
-%regression parameters theta
-%   p = PREDICT(theta, X) computes the predictions for X using a 
-%   threshold at 0.5 (i.e., if sigmoid(theta'*x) >= 0.5, predict 1)
-
-m = size(X, 1); % Number of training examples
+% Useful values
+m = size(X, 1);
+num_labels = size(Theta2, 1);
 
 % You need to return the following variables correctly
+p = zeros(size(X, 1), 1);
 
-p = zeros(m, 1);
+X = [ones(m, 1), X];
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Complete the following code to make predictions using
-%               your learned logistic regression parameters. 
-%               You should set p to a vector of 0's and 1's
+%               your learned neural network. You should set p to a
+%               vector containing labels between 1 to num_labels.
 %
-p = round(sigmoid(X*theta));
+% Hint: The max function might come in useful. In particular, the max
+%       function can also return the index of the max element, for more
+%       information see 'help max'. If your examples are in rows, then, you
+%       can use max(A, [], 2) to obtain the max for each row.
+%
 
+
+
+z2 = Theta1 * X';
+
+% Calculate a2 and transpose after so we can use it as input for the next layer.
+a2 = sigmoid(z2)';
+
+% Add a0 of layer = 1
+ma2 = size(a2, 1);
+a2 = [ones(ma2, 1), a2];
+
+z3 = Theta2 * a2';
+a3 = sigmoid(z3)';
+
+% Get the maximum probability of each index and also get the index so we know which number was predicted.
+[k_probability, k_value_predicted] = max( a3, [], 2);
+
+p = k_value_predicted;
 
 
 
